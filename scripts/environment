@@ -1,0 +1,56 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+if ! command -v unzip &> /dev/null; then
+  echo "ERROR: The \`unzip\` command was not found. Please install using a package manager."
+  exit 1
+fi
+
+# Checks if all environment properties are according to their respective values.
+function check_properties() {
+  # Check if the first argument is an array.
+  local -n array=$2
+
+  if [ ${#array[@]} -eq 0 ]; then
+    echo "ERROR: Could not find the array for parsing properties."
+    exit 1
+  fi
+
+  for value in "${array[@]}"; do
+    echo "$value"
+  done
+}
+
+source "$ROOT_NMS/modules/properties.sh"
+
+# Define the default properties for each value in environment.properties.
+typeset -A properties
+properties=(
+  [jar_type]="spigot"
+  [version]="1.16.4"
+  [region]="us"
+  [server_port]="25565"
+)
+
+# Read the properties and change the array according to the environment.properties file.
+read_properties "$ROOT_NMS/environment/environment.properties" properties
+
+# Download ngrok to be able to host.
+(
+  cd "$ROOT_NMS/environment" &&
+   wget "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip" &&
+   unzip ./ngrok-stable-linux-amd64.zip &&
+   rm -rf ./ngrok-stable-linux-amd64.zip
+)
+
+# Export properties to use them in another files.
+export properties
