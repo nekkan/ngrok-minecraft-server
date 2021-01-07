@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+if ! command -v "$ROOT_NMS/environment/ngrok" &> /dev/null; then
+  echo "ERROR: Please run the environment script first."
+  exit 1
+fi
+
+source "$ROOT_NMS/scripts/environment"
+
+case "${properties[push]}" in
+  true)
+    git add .
+    AUTO_SAVE_NUMBER=$(git rev-list --all --count)
+    git commit -m "Auto-save #$AUTO_SAVE_NUMBER"
+    git push origin main;;
+  *)
+    echo "INFO: Cancelling Git push due to environment.properties."
+    exit 1;;
+esac
