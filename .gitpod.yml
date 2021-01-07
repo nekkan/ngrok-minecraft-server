@@ -1,0 +1,12 @@
+image:
+  file: .gitpod.Dockerfile
+
+tasks:
+  - command: ./init.sh
+
+  # List the ports you want to expose and what to do when they are served. See https://www.gitpod.io/docs/config-ports/
+ports:
+  - port: 4040
+    onOpen: "ignore"
+  - port: 25565
+    onOpen: "ignore"
