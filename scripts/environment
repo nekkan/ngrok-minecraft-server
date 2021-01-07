@@ -47,9 +47,11 @@ read_properties "$ROOT_NMS/environment/environment.properties" properties
 # Download ngrok to be able to host.
 (
   cd "$ROOT_NMS/environment" &&
-   wget "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip" &&
-   unzip ./ngrok-stable-linux-amd64.zip &&
-   rm -rf ./ngrok-stable-linux-amd64.zip
+   if [ ! -f ./ngrok ]; then
+     wget "https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip" &&
+     unzip ./ngrok-stable-linux-amd64.zip &&
+     rm -rf ./ngrok-stable-linux-amd64.zip
+   fi
 )
 
 # Export properties to use them in another files.
