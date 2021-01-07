@@ -1,0 +1,29 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+if ! command -v "$ROOT_NMS/environment/ngrok" &> /dev/null; then
+  echo "ERROR: Please run the environment script first."
+  exit 1
+fi
+
+echo "INFO: You can change the server type and version in environment/environment.properties."
+
+source "$ROOT_NMS/scripts/environment"
+source "$ROOT_NMS/modules/server_files.sh"
+
+(
+  cd "$ROOT_NMS/server" &&
+   accept_eula &&
+   enable_native_transport &&
+   download_server_jar "${properties[jar_type]}" "${properties[version]}"
+)
+
