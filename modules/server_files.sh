@@ -19,9 +19,6 @@ function get_jar_url() {
   if [ -n "$1" ]; then
     case "$1" in
       spigot) echo "https://cdn.getbukkit.org/spigot/spigot-$2.jar";;
-      sponge)
-        echo "ERROR: Sponge is currently unsupported."
-        exit 1;;
       *)
         echo "ERROR: An invalid JAR type was provided."
         exit 1;;
