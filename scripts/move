@@ -1,0 +1,21 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+(cd "$ROOT_NMS/external" && for filename in *; do
+  if [ "$filename" != "*" ]; then
+    if [[ -d $filename ]]; then
+      (cd "$ROOT_NMS/external/$filename" && mv * "$ROOT_NMS/server/$filename/")
+    else
+      mv "$ROOT_NMS/external/$filename" "$ROOT_NMS/server/"
+    fi
+  fi
+done)
