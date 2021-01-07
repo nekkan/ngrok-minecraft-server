@@ -1,0 +1,30 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+if [ -z "$1" ]; then
+  echo "ERROR: The auth token was not provided as first argument."
+  exit 1
+fi
+
+if ! command -v "$ROOT_NMS/environment/ngrok" &> /dev/null; then
+  echo "ERROR: Can't find a installation for \`ngrok\`. Please run the environment script first."
+  exit 1
+fi
+
+source "$ROOT_NMS/scripts/environment"
+
+# shellcheck disable=SC2154
+(
+  cd "$ROOT_NMS/environment" &&
+   ./ngrok authtoken "$1" &&
+   ./ngrok tcp -region "${properties[region]}" "${properties[server_port]}"
+)
