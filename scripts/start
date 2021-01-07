@@ -1,0 +1,22 @@
+#!/bin/bash
+
+if [ -z "$ROOT_NMS" ]; then
+  echo "ERROR: The variable \`ROOT_NMS\` was not defined to the root project. Use \`source ./init.sh\` at the root project to set it."
+  exit 1
+fi
+
+if [ ! -e "$ROOT_NMS" ]; then
+  echo "ERROR: The path corresponding to the \`ROOT_NMS\` variable does not exist."
+  exit 1
+fi
+
+if ! command -v "$ROOT_NMS/environment/ngrok" &> /dev/null; then
+  echo "ERROR: Can't find a installation for \`ngrok\`. Please run the environment script first."
+  exit 1
+fi
+
+source "$ROOT_NMS/scripts/environment"
+
+export JAVA_TOOL_OPTIONS=-Xmx16G
+(cd "$ROOT_NMS/server" && java -Xmx16G -Xms15G -jar "${properties[jar_type]}-${properties[version]}.jar")
+(cd "$ROOT_NMS/scripts" && ./save)
