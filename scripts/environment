@@ -39,6 +39,7 @@ properties=(
   [version]="1.16.4"
   [region]="us"
   [server_port]="25565"
+  [push]="true"
 )
 
 # Read the properties and change the array according to the environment.properties file.
